@@ -1,0 +1,19 @@
+import string
+from faker import Faker
+
+faker_instance = Faker()
+
+class DataGenerator:
+    """
+    Класс для генерации даты с использованием Faker
+    """
+    @staticmethod
+    def generate_project_id():
+        first_latter = faker_instance.random.choice(string.ascii_letters)
+        rest_characters = ''.join(faker_instance.random.choises(string.ascii_letters + string.digits, k=10))
+        project_id = first_latter + rest_characters
+        return project_id
+
+    @staticmethod
+    def generate_project_name():
+        return faker_instance.word()
