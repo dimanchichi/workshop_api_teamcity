@@ -13,7 +13,10 @@ class CustomRequester:
         self.session = session
         self.base_url = BASE_URL
 
-    def send_request(self, method: str, endpoint: str, data: Optional[Dict[str, Any]] = None, expected_status: HTTPStatus = HTTPStatus.OK):
+    def send_request(self, method: str,
+                     endpoint: str,
+                     data: Optional[Dict[str, Any]] = None,
+                     expected_status: HTTPStatus = HTTPStatus.OK):
         """
         Враппер для запросов
         :param method: метод запроса
@@ -23,9 +26,9 @@ class CustomRequester:
         :return: возвращает объект ответа
         """
         url = f"{self.base_url}{endpoint}"
-        response = self.session.request(method, url, json=data)
+        response = self.session.request(method=method.upper(), url=url, json=data)
         if response.status_code != expected_status:
-            raise ValueError(f"Unexpected status code: {response.status_code}")
+            raise ValueError(f"Unexpected status code: {response.status_code}. Expected: {expected_status.value}")
         return response
 
     def _update_session_headers(self, **kwargs):
