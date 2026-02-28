@@ -15,5 +15,17 @@ class DataGenerator:
         return project_id
 
     @staticmethod
+    def generate_build_config_id():
+        first_word = "build_config_"
+        rest_characters = ''.join(faker_instance.random.choices(string.ascii_letters + string.digits, k=5))
+        build_config_id = first_word + rest_characters
+        return build_config_id
+
+    @staticmethod
     def generate_project_name():
         return faker_instance.word()
+
+    @staticmethod
+    def generate_build_config_name():
+        list_words = faker_instance.words(nb=2)
+        return "_".join(list_words)
