@@ -11,7 +11,7 @@ class CustomRequester:
         'Accept': 'application/json',
     })
 
-    def __init__(self, session):
+    def __init__(self, session = None):
         self.session = session
         self.base_url = BASE_URL
         self.logger = logging.getLogger(__name__)
@@ -76,8 +76,3 @@ class CustomRequester:
                 )
         except Exception as e:
             self.logger.info(f"\nLogging went wrong: {type(e)} - {e}")
-
-
-
-        
-
