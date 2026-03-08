@@ -21,5 +21,6 @@ This project - about how to make an API autotests for TeamCity CI/CD
 * api 
 * -- auth_api - класс для прохождения аутентификации
 * -- project_api - класс для работы с проектом (создание/удаление)
+* -- build_api - класс для работы с билдом (создание/запуск/удаление)
 * -- api_manager - управление API
 * conftest.py - хранение фикстур (создание session и обогащение им api manager)
