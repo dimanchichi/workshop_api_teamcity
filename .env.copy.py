@@ -1,0 +1,3 @@
+TC_USER=
+TC_PASSWORD=
+TC_BASE_URL=http://localhost:8111
