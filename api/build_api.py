@@ -7,9 +7,9 @@ class BuildAPI(CustomRequester):
     """
     Класс для работы с билдом
     """
+
     def __init__(self, session):
-        super().__init__()
-        self.session = session
+        super().__init__(session)
 
     def create_build_config(self, build_config_data, expected_status=HTTPStatus.INTERNAL_SERVER_ERROR):
         return self.send_request("POST", "/app/rest/buildTypes/", data=build_config_data, expected_status=expected_status)

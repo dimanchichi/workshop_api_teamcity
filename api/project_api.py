@@ -7,9 +7,6 @@ class ProjectAPI(CustomRequester):
     """
     Класс для работы с проектом
     """
-    def __init__(self, session):
-        super().__init__()
-        self.session = session
 
     def create_project(self, project_data):
         return self.send_request("POST", "/app/rest/projects", data=project_data)

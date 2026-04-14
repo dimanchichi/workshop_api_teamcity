@@ -29,3 +29,15 @@ class DataGenerator:
     def generate_build_config_name():
         list_words = faker_instance.words(nb=2)
         return "_".join(list_words)
+
+    @staticmethod
+    def generate_user_name():
+        return faker_instance.name()
+
+    @staticmethod
+    def generate_password():
+        return faker_instance.password(length=8)
+
+    @staticmethod
+    def generate_email():
+        return faker_instance.email(domain="gmail.com")

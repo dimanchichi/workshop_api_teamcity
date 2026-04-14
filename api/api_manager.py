@@ -1,6 +1,7 @@
 from api.auth_api import AuthAPI
 from api.build_api import BuildAPI
 from api.project_api import ProjectAPI
+from api.user_api import UserAPI
 
 
 class ApiManager:
@@ -9,3 +10,4 @@ class ApiManager:
         self.auth_api = AuthAPI(session)
         self.project_api = ProjectAPI(session)
         self.build_config_api = BuildAPI(session)
+        self.user_api = UserAPI(session)

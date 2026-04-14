@@ -5,10 +5,6 @@ class AuthAPI(CustomRequester):
     """
     Класс отвечает за прохождение аутентификации путем получения токена и апдейта хэдеров
     """
-    def __init__(self, session):
-        super().__init__()
-        self.session = session
-        self.create_csrf_token()
 
     def create_csrf_token(self):
         self.session.auth = ("admin", "admin")
