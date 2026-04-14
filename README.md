@@ -1,26 +1,132 @@
+# TeamCity API Autotests
 
-## Getting Started
+Фреймворк для автоматизированного тестирования REST API TeamCity CI/CD.
 
-This project - about how to make an API autotests for TeamCity CI/CD
+## Стек
 
+- **Python** 3.11.9
+- **pytest** — тест-раннер
+- **requests** — HTTP-клиент
+- **Faker** — генерация тестовых данных
+- **python-dotenv** — управление конфигурацией
 
-### Components
+## Требования
 
-* Create_project - contains test for API
-* gitignore - must have
-* enums - for vars
-* -- host - для хранения хоста
-* custom_requester - враппер для отправки запросов (сюда кидаем базовые хэдеры, метод отправки запроса, метод дополнения хэдеров) и логирование
-* utils - директория для хранения утилит (ех - генерация даты)
-* -- data_generator - генерация данных с использованием Faker
-* data_for_test - директория формирования тестовых данных
-* -- project_data - генерация даты для создания проектас помощью дата_генератора для создания проекта
-* -- build_config_data - генерация даты для создания билда
-* -- build_type_data - генерация даты для запуска билда
-* pytest.ini - конфигурации, настройки логера
-* api 
-* -- auth_api - класс для прохождения аутентификации
-* -- project_api - класс для работы с проектом (создание/удаление)
-* -- build_api - класс для работы с билдом (создание/запуск/удаление)
-* -- api_manager - управление API
-* conftest.py - хранение фикстур (создание session и обогащение им api manager)
+- Python 3.11.9
+- Docker и Docker Compose
+
+## Быстрый старт
+
+### 1. Клонировать репозиторий
+
+```bash
+git clone https://github.com/dimanchichi/workshop_api_teamcity.git
+cd workshop_api_teamcity
+```
+
+### 2. Запустить TeamCity в Docker
+
+```bash
+docker compose up -d
+```
+
+Дождаться запуска сервера и агента. TeamCity будет доступен по адресу `http://localhost:8111`.  
+При первом запуске пройти начальную настройку через браузер и создать администратора.
+
+### 3. Установить зависимости
+
+```bash
+pip install -r requirements
+```
+
+### 4. Настроить переменные окружения
+
+Скопировать `.env.copy` и переименовать в `.env`:
+
+```bash
+cp .env.copy .env
+```
+
+Открыть `.env` и заполнить своими значениями:
+
+```env
+TC_USER=your_admin_username
+TC_PASSWORD=your_admin_password
+TC_BASE_URL=http://localhost:8111
+```
+
+## Структура проекта
+
+```
+├── api/                        # API-клиенты
+│   ├── api_manager.py          # Точка входа, объединяет все API-клиенты
+│   ├── auth_api.py             # Аутентификация
+│   ├── project_api.py          # Работа с проектами (создание/удаление)
+│   ├── build_api.py            # Работа с билдами (создание/запуск/удаление)
+│   └── user_api.py             # Работа с пользователями
+│
+├── custom_requester/
+│   └── requester.py            # Базовый HTTP-клиент с логированием
+│
+├── data_for_test/              # Генерация тестовых данных
+│   ├── project_data.py         # Данные для создания проекта
+│   ├── build_config_data.py    # Данные для создания билд-конфига
+│   └── build_type_data.py      # Данные для запуска билда
+│
+├── enums/
+│   └── host.py                 # Конфигурация подключения (из .env)
+│
+├── utils/
+│   └── data_generator.py       # Генерация случайных данных через Faker
+│
+├── conftest.py                 # Фикстуры pytest (сессия, api_manager, тестовые данные)
+├── create_project.py           # Тесты: создание проекта и запуск билда
+├── pytest.ini                  # Конфигурация pytest и логгера
+├── .env                        # Локальные переменные окружения (не в git)
+├── .env.copy                   # Шаблон переменных окружения (в git)
+├── .gitignore
+└── requirements                # Зависимости проекта
+```
+
+## Архитектура
+
+```
+conftest.py (фикстуры)
+    └── ApiManager
+            ├── ProjectAPI  ──┐
+            ├── BuildAPI    ──┤──► CustomRequester (отправка запросов + логирование)
+            ├── AuthAPI     ──┤
+            └── UserAPI     ──┘
+```
+
+Каждый API-класс наследует `CustomRequester` и использует метод `send_request` для отправки запросов. Все запросы автоматически логируются в формате `curl`-команды для удобного воспроизведения вручную.
+
+## Логирование
+
+Каждый запрос и ответ логируется в формате:
+
+```
+pytest create_project.py::TestProjectCreate::test_create_project
+curl -X POST 'http://localhost:8111/app/rest/projects' \
+-H 'Accept: application/json' \
+-H 'Authorization: ***' \
+-d '{"name": "example", "id": "abc123", ...}'
+
+RESPONSE:
+STATUS_CODE: 200
+DATA: {"id":"abc123", ...}
+```
+
+Чувствительные заголовки (`Authorization`, `Cookie`) маскируются автоматически.
+
+## Конфигурация pytest
+
+Настройки в `pytest.ini`:
+
+```ini
+[pytest]
+log_cli = true
+log_cli_level = INFO
+log_cli_format = %(asctime)s %(levelname)s %(message)s
+log_cli_date_format = %Y-%m-%d %H:%M:%S
+```
